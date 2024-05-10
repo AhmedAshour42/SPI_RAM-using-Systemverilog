@@ -1,0 +1,819 @@
+Coverage Report by instance with details
+
+=================================================================================
+=== Instance: /RAM_TB/DUT
+=== Design Unit: work.ram
+=================================================================================
+
+Assertion Coverage:
+    Assertions                       2         2         0   100.00%
+--------------------------------------------------------------------
+Name                 File(Line)                   Failure      Pass 
+                                                  Count        Count
+--------------------------------------------------------------------
+/RAM_TB/DUT/Assrt1   ram.sv(24)                         0          1
+/RAM_TB/DUT/Assrt2   ram.sv(25)                         0          1
+Branch Coverage:
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                         8         7         1    87.50%
+
+================================Branch Details================================
+
+Branch Coverage for instance /RAM_TB/DUT
+
+    Line         Item                      Count     Source 
+    ----         ----                      -----     ------ 
+  File ram.sv
+------------------------------------IF Branch------------------------------------
+    29                                     90187     Count coming in to IF
+    29              1                        383     		if(~rst_n) begin
+    33              1                      44890     		else if(rx_valid) begin
+    53              1                      44914     		else 
+Branch totals: 3 hits of 3 branches = 100.00%
+
+------------------------------------CASE Branch------------------------------------
+    34                                     44890     Count coming in to CASE
+    35              1                      13675     				2'b00: begin
+    39              1                      13736     				2'b01: begin
+    43              1                      13877     				2'b10: begin
+    47              1                       3602     				2'b11: begin
+                                         ***0***     All False Count
+Branch totals: 4 hits of 5 branches = 80.00%
+
+
+Statement Coverage:
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Statements                      12        12         0   100.00%
+
+================================Statement Details================================
+
+Statement Coverage for instance /RAM_TB/DUT --
+
+    Line         Item                      Count     Source 
+    ----         ----                      -----     ------ 
+  File ram.sv
+    1                                                module ram (din,clk,rst_n,rx_valid,dout,tx_valid);
+    2                                                	parameter MEM_DEPTH = 256;
+    3                                                	parameter ADDR_SIZE = 8;
+    4                                                
+    5                                                	input [9:0] din;
+    6                                                	input clk, rst_n , rx_valid;
+    7                                                	output reg [7:0] dout;
+    8                                                	output reg tx_valid;
+    9                                                
+    10                                               	reg [ADDR_SIZE-1:0] write_addr, read_addr;
+    11                                               	
+    12                                               	reg [ADDR_SIZE-1:0] mem [MEM_DEPTH-1:0];
+    13                                               
+    14                                               	property write_addr_SVA ;
+    15                                               		logic [7:0] addr_exp;
+    16                                               		@(posedge clk) disable iff(!rst_n || !rx_valid) (din[9:8] == 2'b00, addr_exp=din[7:0]) |=> (write_addr == addr_exp);
+    17                                               	endproperty
+    18                                               
+    19                                               	property read_addr_SVA ;
+    20                                               		logic [7:0] addr_exp;
+    21                                               		@(posedge clk) disable iff(!rst_n || !rx_valid) (din[9:8] == 2'b10, addr_exp=din[7:0]) |=> (read_addr == addr_exp);
+    22                                               	endproperty
+    23                                               
+    24                                               	Assrt1 : assert property (write_addr_SVA);
+    25                                               	Assrt2 : assert property (read_addr_SVA);
+    26                                               
+    27                                               
+    28              1                      90187     	always @(posedge clk,negedge rst_n) begin
+    29                                               		if(~rst_n) begin
+    30              1                        383     			dout<='b0;
+    31              1                        383     			tx_valid<='b0;
+    32                                               		end
+    33                                               		else if(rx_valid) begin
+    34                                               			case (din[9:8])
+    35                                               				2'b00: begin
+    36              1                      13675     					write_addr <= din[7:0];
+    37              1                      13675     					tx_valid <=0;
+    38                                               				end
+    39                                               				2'b01: begin
+    40              1                      13736     					mem [write_addr] <= din[7:0];
+    41              1                      13736     					tx_valid <=0;
+    42                                               				end	
+    43                                               				2'b10: begin
+    44              1                      13877     					read_addr <= din[7:0];
+    45              1                      13877     					tx_valid <=0;
+    46                                               				end
+    47                                               				2'b11: begin
+    48              1                       3602     					dout <= mem[read_addr];
+    49              1                       3602     					tx_valid <=1;
+    50                                               				end
+    51                                               			endcase
+    52                                               		end
+    53                                               		else 
+    54              1                      44914     			tx_valid =0;
+
+Toggle Coverage:
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Toggles                         76        76         0   100.00%
+
+================================Toggle Details================================
+
+Toggle Coverage for instance /RAM_TB/DUT --
+
+                                              Node      1H->0L      0L->1H  "Coverage"
+                                              ---------------------------------------
+                                               clk           1           1      100.00 
+                                          din[0-9]           1           1      100.00 
+                                         dout[7-0]           1           1      100.00 
+                                    read_addr[7-0]           1           1      100.00 
+                                             rst_n           1           1      100.00 
+                                          rx_valid           1           1      100.00 
+                                          tx_valid           1           1      100.00 
+                                   write_addr[7-0]           1           1      100.00 
+
+Total Node Count     =         38 
+Toggled Node Count   =         38 
+Untoggled Node Count =          0 
+
+Toggle Coverage      =     100.00% (76 of 76 bins)
+
+=================================================================================
+=== Instance: /RAM_TB
+=== Design Unit: work.RAM_TB
+=================================================================================
+
+Assertion Coverage:
+    Assertions                       1         1         0   100.00%
+--------------------------------------------------------------------
+Name                 File(Line)                   Failure      Pass 
+                                                  Count        Count
+--------------------------------------------------------------------
+/RAM_TB/#anonblk#90584194#53#4#/#ublk#90584194#53/immed__54
+                     RAM_TB.sv(54)                      0          1
+Branch Coverage:
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        25        21         4    84.00%
+
+================================Branch Details================================
+
+Branch Coverage for instance /RAM_TB
+
+    Line         Item                      Count     Source 
+    ----         ----                      -----     ------ 
+  File RAM_TB.sv
+------------------------------------IF Branch------------------------------------
+    68                                    120191     Count coming in to IF
+    68              1                        383     	if(~rst_n) begin
+    72              1                     119808     	else begin
+Branch totals: 2 hits of 2 branches = 100.00%
+
+------------------------------------CASE Branch------------------------------------
+    73                                    119808     Count coming in to CASE
+    74              1                      37391     	    2'b00: begin
+    83              1                      37429     	    2'b01: begin
+    92              1                      37723     	    2'b10: begin
+    101             1                       7264     	    2'b11: begin
+                                               1     All False Count
+Branch totals: 5 hits of 5 branches = 100.00%
+
+------------------------------------IF Branch------------------------------------
+    75                                     37391     Count coming in to IF
+    75              1                      13675     	    	if (rx_valid) begin
+    79              1                      23716     	    	else begin
+Branch totals: 2 hits of 2 branches = 100.00%
+
+------------------------------------IF Branch------------------------------------
+    84                                     37429     Count coming in to IF
+    84              1                      13736     	    	if (rx_valid) begin
+    88              1                      23693     	    	else begin
+Branch totals: 2 hits of 2 branches = 100.00%
+
+------------------------------------IF Branch------------------------------------
+    93                                     37723     Count coming in to IF
+    93              1                      13877     	    	if (rx_valid) begin
+    97              1                      23846     	    	else begin
+Branch totals: 2 hits of 2 branches = 100.00%
+
+------------------------------------IF Branch------------------------------------
+    102                                     7264     Count coming in to IF
+    102             1                       3602     	    	if (rx_valid) begin
+    106             1                       3662     	    	else begin
+Branch totals: 2 hits of 2 branches = 100.00%
+
+------------------------------------IF Branch------------------------------------
+    165                                    50000     Count coming in to IF
+    165             1                      13675     	if ((rst_n==1) && rx_valid && (din[9:8]==2'b00)) begin
+                                           36325     All False Count
+Branch totals: 2 hits of 2 branches = 100.00%
+
+------------------------------------IF Branch------------------------------------
+    173                                    50000     Count coming in to IF
+    173             1                    ***0***     	if (dout!=dout_ref) begin
+    177             1                      50000     	else begin
+Branch totals: 1 hit of 2 branches = 50.00%
+
+------------------------------------IF Branch------------------------------------
+    181                                    50000     Count coming in to IF
+    181             1                    ***0***     	if (tx_valid !=tx_valid_ref) begin
+    185             1                      50000     	else begin
+Branch totals: 1 hit of 2 branches = 50.00%
+
+------------------------------------IF Branch------------------------------------
+    193                                        1     Count coming in to IF
+    193             1                    ***0***     	if (dout!=0) begin
+    197             1                          1     	else begin
+Branch totals: 1 hit of 2 branches = 50.00%
+
+------------------------------------IF Branch------------------------------------
+    201                                        1     Count coming in to IF
+    201             1                    ***0***     	if (tx_valid !=0) begin
+    205             1                          1     	else begin
+Branch totals: 1 hit of 2 branches = 50.00%
+
+
+Condition Coverage:
+    Enabled Coverage              Bins   Covered    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Conditions                       6         3         3    50.00%
+
+================================Condition Details================================
+
+Condition Coverage for instance /RAM_TB --
+
+  File RAM_TB.sv
+----------------Focused Condition View-------------------
+Line       165 Item    1  ((rst_n && rx_valid) && (din[9:8] == 0))
+Condition totals: 3 of 3 input terms covered = 100.00%
+
+       Input Term   Covered  Reason for no coverage   Hint
+      -----------  --------  -----------------------  --------------
+            rst_n         Y
+         rx_valid         Y
+  (din[9:8] == 0)         Y
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  rst_n_0               -                             
+  Row   2:          1  rst_n_1               ((din[9:8] == 0) && rx_valid) 
+  Row   3:          1  rx_valid_0            rst_n                         
+  Row   4:          1  rx_valid_1            ((din[9:8] == 0) && rst_n)    
+  Row   5:          1  (din[9:8] == 0)_0     (rst_n && rx_valid)           
+  Row   6:          1  (din[9:8] == 0)_1     (rst_n && rx_valid)           
+
+----------------Focused Condition View-------------------
+Line       173 Item    1  (dout != dout_ref)
+Condition totals: 0 of 1 input term covered = 0.00%
+
+          Input Term   Covered  Reason for no coverage   Hint
+         -----------  --------  -----------------------  --------------
+  (dout != dout_ref)         N  '_1' not hit             Hit '_1'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  (dout != dout_ref)_0  -                             
+  Row   2:    ***0***  (dout != dout_ref)_1  -                             
+
+----------------Focused Condition View-------------------
+Line       181 Item    1  (tx_valid != tx_valid_ref)
+Condition totals: 0 of 1 input term covered = 0.00%
+
+                  Input Term   Covered  Reason for no coverage   Hint
+                 -----------  --------  -----------------------  --------------
+  (tx_valid != tx_valid_ref)         N  '_1' not hit             Hit '_1'
+
+     Rows:       Hits  FEC Target                    Non-masking condition(s)      
+ ---------  ---------  --------------------          -------------------------     
+  Row   1:          1  (tx_valid != tx_valid_ref)_0  -                             
+  Row   2:    ***0***  (tx_valid != tx_valid_ref)_1  -                             
+
+----------------Focused Condition View-------------------
+Line       193 Item    1  (dout != 0)
+Condition totals: 0 of 1 input term covered = 0.00%
+
+   Input Term   Covered  Reason for no coverage   Hint
+  -----------  --------  -----------------------  --------------
+  (dout != 0)         N  '_1' not hit             Hit '_1'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  (dout != 0)_0         -                             
+  Row   2:    ***0***  (dout != 0)_1         -                             
+
+
+Statement Coverage:
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Statements                     100        92         8    92.00%
+
+================================Statement Details================================
+
+Statement Coverage for instance /RAM_TB --
+
+    Line         Item                      Count     Source 
+    ----         ----                      -----     ------ 
+  File RAM_TB.sv
+    3                                                module RAM_TB ();
+    4                                                
+    5                                                logic [9:0] din;
+    6                                                logic clk, rst_n , rx_valid;
+    7                                                logic [7:0] dout;
+    8                                                logic tx_valid;
+    9                                                
+    10                                               logic [7:0] add_read_ref;
+    11                                               logic [7:0] add_write_ref;
+    12                                               logic [7:0] dout_ref;
+    13                                               logic tx_valid_ref;
+    14                                               
+    15                                               logic [7:0]   address_array          [];
+    16                                               logic [7:0]   data_to_write_array    [];
+    17                                               logic [7:0]   RAM_GoldenModel [logic [7:0]];
+    18                                               
+    19                                               int correct_count =0;
+    20                                               int error_count   =0;
+    21                                               
+    22              1                          1     RAM_rand ram_class = new;
+    23                                               
+    24                                               ram DUT (din,clk,rst_n,rx_valid,dout,tx_valid);
+    25                                               
+    26                                               initial begin
+    27              1                          1     	clk = 0;
+    28              1                          1     	forever begin
+    29              1                     240004     		#1;  clk = ~clk;
+    29              2                     240003     
+    30                                               	end
+    31                                               end
+    32                                               
+    33                                               initial begin
+    34              1                          1     	stimulus1_gen();
+    35              1                          1     	Reset_task ();
+    36                                               
+    37                                               	//loop for writing data
+    38              1                          1     	for (int i = 0; i < TESTS; i++) begin
+    38              2                      10000     
+    39              1                      10000     		addrss_write_task (address_array [i]);
+    40              1                      10000     		Check_task ();
+    41              1                      10000     		data_write_task (data_to_write_array[i]);
+    42              1                      10000     		Check_task ();
+    43                                               	end
+    44                                               
+    45                                               	//loop for reading the data and checking
+    46              1                          1     	for (int i = 0; i < TESTS; i++) begin
+    46              2                      10000     
+    47              1                      10000     		addrss_read_task (address_array [i]);
+    48              1                      10000     		Check_task ();
+    49              1                      10000     		DataRead_Check();
+    50                                               	end
+    51                                               
+    52                                               	//loop for randomized inputs
+    53              1                          1     	for (int i = 0; i < TESTS; i++) begin
+    53              2                      10000     
+    54                                               		assert (ram_class.randomize());
+    55              1                      10000     		din= ram_class.din;
+    56              1                      10000     		rst_n = ram_class.rst_n;
+    57              1                      10000     		rx_valid = ram_class.rx_valid;
+    58              1                      10000     		Sample_task ();
+    59              1                      10000     		Check_task ();
+    60                                               	end
+    61                                               
+    62              1                          1     	$display("After test, Correct cases = %d ; Wrong cases = %d", correct_count, error_count);
+    63              1                          1     	#1;
+    64              1                          1     	$stop;
+    65                                               end
+    66                                               
+    67              1                     120191     always @(posedge clk or negedge rst_n) begin
+    68                                               	if(~rst_n) begin
+    69              1                        383     		dout_ref <= 0;
+    70              1                        383     		tx_valid_ref <= 0;
+    71                                               	end 
+    72                                               	else begin
+    73                                               		case (din[9:8])
+    74                                               	    2'b00: begin
+    75                                               	    	if (rx_valid) begin
+    76              1                      13675     	    		add_write_ref<=din[7:0];
+    77              1                      13675     	    		tx_valid_ref<=0;
+    78                                               	    	end
+    79                                               	    	else begin
+    80              1                      23716     	    		tx_valid_ref<=1'b0;
+    81                                               	    	end
+    82                                               	    end
+    83                                               	    2'b01: begin
+    84                                               	    	if (rx_valid) begin
+    85              1                      13736     	    		RAM_GoldenModel[add_write_ref] = din[7:0];;
+    86              1                      13736     	    		tx_valid_ref<=0;
+    87                                               	    	end
+    88                                               	    	else begin
+    89              1                      23693     	    		tx_valid_ref<=1'b0;
+    90                                               	    	end
+    91                                               	    end
+    92                                               	    2'b10: begin
+    93                                               	    	if (rx_valid) begin
+    94              1                      13877     	    		add_read_ref<=din[7:0];
+    95              1                      13877     	    		tx_valid_ref<=0;
+    96                                               	    	end
+    97                                               	    	else begin
+    98              1                      23846     	    		tx_valid_ref<=1'b0;
+    99                                               	    	end
+    100                                              	    end
+    101                                              	    2'b11: begin
+    102                                              	    	if (rx_valid) begin
+    103             1                       3602     	    		dout_ref<=RAM_GoldenModel[add_read_ref];
+    104             1                       3602     	    		tx_valid_ref<=1'b1;
+    105                                              	    	end
+    106                                              	    	else begin
+    107             1                       3662     	    		tx_valid_ref<=1'b0;
+    108                                              	    	end
+    109                                              	    end
+    110                                              	  endcase
+    111                                              	end
+    112                                              end
+    113                                              
+    114                                              task stimulus1_gen();
+    115             1                          1     	address_array        = new[TESTS];
+    116             1                          1     	data_to_write_array  = new[TESTS];
+    117             1                          1     	for (int i = 0; i < TESTS; i++) begin
+    117             2                      10000     
+    118             1                      10000     		address_array[i]       = $random;
+    119             1                      10000     		data_to_write_array[i] = $random;
+    120                                              	end
+    121                                              endtask : stimulus1_gen
+    122                                              
+    123                                              task addrss_write_task (input logic [7:0] write_address);
+    124             1                      10000     	@(negedge clk);
+    125             1                      10000     	rst_n=1; rx_valid=1;
+    125             2                      10000     
+    126             1                      10000     	din = {2'b00, write_address};
+    127             1                      10000     	Sample_task ();
+    128             1                      10000     	@(negedge clk);
+    129             1                      10000     	rx_valid=0;
+    130                                              endtask : addrss_write_task 
+    131                                              
+    132                                              task data_write_task (input logic [7:0] write_data);
+    133             1                      10000     	@(negedge clk);
+    134             1                      10000     	rst_n=1; rx_valid=1;
+    134             2                      10000     
+    135             1                      10000     	din = {2'b01, write_data};
+    136             1                      10000     	Sample_task ();
+    137             1                      10000     	@(negedge clk);
+    138             1                      10000     	rx_valid=0;
+    139                                              endtask : data_write_task 
+    140                                              
+    141                                              task addrss_read_task (input logic [7:0] read_address);
+    142             1                      10000     	@(negedge clk);
+    143             1                      10000     	rst_n=1; rx_valid=1;
+    143             2                      10000     
+    144             1                      10000     	din = {2'b10, read_address};
+    145             1                      10000     	Sample_task ();
+    146             1                      10000     	@(negedge clk);
+    147             1                      10000     	rx_valid=0;
+    148                                              endtask : addrss_read_task 
+    149                                              
+    150                                              task DataRead_Check();
+    151             1                      10000     	@(negedge clk);
+    152             1                      10000     	rst_n=1; rx_valid=1;
+    152             2                      10000     
+    153             1                      10000     	din = {2'b11, $random()};
+    154             1                      10000     	Sample_task ();
+    155             1                      10000     	Check_task ();
+    156             1                      10000     	rx_valid=0;
+    157                                              endtask : DataRead_Check
+    158                                              
+    159                                              task Sample_task ();
+    160             1                      50000     	ram_class.rx_valid = rx_valid;
+    161             1                      50000     	ram_class.rst_n = rst_n;
+    162             1                      50000     	ram_class.din = din;
+    163             1                      50000     	ram_class.dout = dout;
+    164             1                      50000     	ram_class.tx_valid = tx_valid;
+    165                                              	if ((rst_n==1) && rx_valid && (din[9:8]==2'b00)) begin
+    166             1                      13675     		ram_class.address = din[7:0];
+    167                                              	end
+    168             1                      50000     	ram_class.cvr_gp.sample();
+    169                                              endtask : Sample_task 
+    170                                              
+    171                                              task Check_task ();
+    172             1                      50000     	@(negedge clk)
+    173                                              	if (dout!=dout_ref) begin
+    174             1                    ***0***     		$display("Error - dout incorrect");
+    175             1                    ***0***     		error_count=error_count+1;
+    176                                              	end
+    177                                              	else begin
+    178             1                      50000     		correct_count=correct_count+1;
+    179                                              	end
+    180                                              
+    181                                              	if (tx_valid !=tx_valid_ref) begin
+    182             1                    ***0***     		$display("Error - tx_valid incorrect");
+    183             1                    ***0***     		error_count=error_count+1;
+    184                                              	end
+    185                                              	else begin
+    186             1                      50000     		correct_count=correct_count+1;
+    187                                              	end
+    188                                              endtask : Check_task 
+    189                                              
+    190                                              task Reset_task ();
+    191             1                          1     	rst_n=0;
+    192             1                          1     	@(negedge clk)
+    193                                              	if (dout!=0) begin
+    194             1                    ***0***     		$display("Error - Reset dout incorrect");
+    195             1                    ***0***     		error_count=error_count+1;
+    196                                              	end
+    197                                              	else begin
+    198             1                          1     		correct_count=correct_count+1;
+    199                                              	end
+    200                                              
+    201                                              	if (tx_valid !=0) begin
+    202             1                    ***0***     		$display("Error - Reset tx_valid incorrect");
+    203             1                    ***0***     		error_count=error_count+1;
+    204                                              	end
+    205                                              	else begin
+    206             1                          1     		correct_count=correct_count+1;
+    207                                              	end
+    208             1                          1     	rst_n=1;
+
+Toggle Coverage:
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Toggles                        222       125        97    56.30%
+
+================================Toggle Details================================
+
+Toggle Coverage for instance /RAM_TB --
+
+                                              Node      1H->0L      0L->1H  "Coverage"
+                                              ---------------------------------------
+                                 add_read_ref[0-7]           1           1      100.00 
+                                add_write_ref[0-7]           1           1      100.00 
+                                               clk           1           1      100.00 
+                                  correct_count[0]           0           0        0.00 
+                               correct_count[1-15]           1           1      100.00 
+                                 correct_count[16]           0           1       50.00 
+                              correct_count[17-31]           0           0        0.00 
+                                          din[0-9]           1           1      100.00 
+                                         dout[0-7]           1           1      100.00 
+                                     dout_ref[0-7]           1           1      100.00 
+                                 error_count[0-31]           0           0        0.00 
+                                             rst_n           1           1      100.00 
+                                          rx_valid           1           1      100.00 
+                                          tx_valid           1           1      100.00 
+                                      tx_valid_ref           1           1      100.00 
+
+Total Node Count     =        111 
+Toggled Node Count   =         62 
+Untoggled Node Count =         49 
+
+Toggle Coverage      =      56.30% (125 of 222 bins)
+
+=================================================================================
+=== Instance: /RAM_pkg
+=== Design Unit: work.RAM_pkg
+=================================================================================
+
+Covergroup Coverage:
+    Covergroups                      1        na        na   100.00%
+        Coverpoints/Crosses          4        na        na        na
+            Covergroup Bins         72        72         0   100.00%
+----------------------------------------------------------------------------------------------------------
+Covergroup                                             Metric       Goal       Bins    Status               
+                                                                                                         
+----------------------------------------------------------------------------------------------------------
+ TYPE /RAM_pkg/RAM_rand/cvr_gp                        100.00%        100          -    Covered              
+    covered/total bins:                                    72         72          -                      
+    missing/total bins:                                     0         72          -                      
+    % Hit:                                            100.00%        100          -                      
+    Coverpoint adrdess_cp                             100.00%        100          -    Covered              
+        covered/total bins:                                64         64          -                      
+        missing/total bins:                                 0         64          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin auto[0:3]                                     790          1          -    Covered              
+        bin auto[4:7]                                     787          1          -    Covered              
+        bin auto[8:11]                                    711          1          -    Covered              
+        bin auto[12:15]                                   889          1          -    Covered              
+        bin auto[16:19]                                   847          1          -    Covered              
+        bin auto[20:23]                                   731          1          -    Covered              
+        bin auto[24:27]                                   758          1          -    Covered              
+        bin auto[28:31]                                   796          1          -    Covered              
+        bin auto[32:35]                                   863          1          -    Covered              
+        bin auto[36:39]                                   767          1          -    Covered              
+        bin auto[40:43]                                   842          1          -    Covered              
+        bin auto[44:47]                                   767          1          -    Covered              
+        bin auto[48:51]                                   736          1          -    Covered              
+        bin auto[52:55]                                   862          1          -    Covered              
+        bin auto[56:59]                                   849          1          -    Covered              
+        bin auto[60:63]                                   838          1          -    Covered              
+        bin auto[64:67]                                   759          1          -    Covered              
+        bin auto[68:71]                                   852          1          -    Covered              
+        bin auto[72:75]                                   779          1          -    Covered              
+        bin auto[76:79]                                   662          1          -    Covered              
+        bin auto[80:83]                                   693          1          -    Covered              
+        bin auto[84:87]                                   783          1          -    Covered              
+        bin auto[88:91]                                   764          1          -    Covered              
+        bin auto[92:95]                                   759          1          -    Covered              
+        bin auto[96:99]                                   719          1          -    Covered              
+        bin auto[100:103]                                 674          1          -    Covered              
+        bin auto[104:107]                                 852          1          -    Covered              
+        bin auto[108:111]                                 693          1          -    Covered              
+        bin auto[112:115]                                 880          1          -    Covered              
+        bin auto[116:119]                                 890          1          -    Covered              
+        bin auto[120:123]                                 805          1          -    Covered              
+        bin auto[124:127]                                 778          1          -    Covered              
+        bin auto[128:131]                                 903          1          -    Covered              
+        bin auto[132:135]                                 755          1          -    Covered              
+        bin auto[136:139]                                 666          1          -    Covered              
+        bin auto[140:143]                                 829          1          -    Covered              
+        bin auto[144:147]                                 834          1          -    Covered              
+        bin auto[148:151]                                 833          1          -    Covered              
+        bin auto[152:155]                                 789          1          -    Covered              
+        bin auto[156:159]                                 737          1          -    Covered              
+        bin auto[160:163]                                 880          1          -    Covered              
+        bin auto[164:167]                                 618          1          -    Covered              
+        bin auto[168:171]                                 905          1          -    Covered              
+        bin auto[172:175]                                 686          1          -    Covered              
+        bin auto[176:179]                                 704          1          -    Covered              
+        bin auto[180:183]                                 775          1          -    Covered              
+        bin auto[184:187]                                 736          1          -    Covered              
+        bin auto[188:191]                                 795          1          -    Covered              
+        bin auto[192:195]                                 664          1          -    Covered              
+        bin auto[196:199]                                 863          1          -    Covered              
+        bin auto[200:203]                                 786          1          -    Covered              
+        bin auto[204:207]                                 698          1          -    Covered              
+        bin auto[208:211]                                 736          1          -    Covered              
+        bin auto[212:215]                                 720          1          -    Covered              
+        bin auto[216:219]                                 738          1          -    Covered              
+        bin auto[220:223]                                 798          1          -    Covered              
+        bin auto[224:227]                                 749          1          -    Covered              
+        bin auto[228:231]                                 893          1          -    Covered              
+        bin auto[232:235]                                 785          1          -    Covered              
+        bin auto[236:239]                                 851          1          -    Covered              
+        bin auto[240:243]                                 814          1          -    Covered              
+        bin auto[244:247]                                 726          1          -    Covered              
+        bin auto[248:251]                                 799          1          -    Covered              
+        bin auto[252:255]                                 760          1          -    Covered              
+    Coverpoint rx_valid_cp                            100.00%        100          -    Covered              
+        covered/total bins:                                 2          2          -                      
+        missing/total bins:                                 0          2          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin auto[0]                                      5012          1          -    Covered              
+        bin auto[1]                                     44988          1          -    Covered              
+    Coverpoint tx_valid_cp                            100.00%        100          -    Covered              
+        covered/total bins:                                 2          2          -                      
+        missing/total bins:                                 0          2          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin auto[0]                                     48779          1          -    Covered              
+        bin auto[1]                                      1221          1          -    Covered              
+    Cross rx_tx_cross                                 100.00%        100          -    Covered              
+        covered/total bins:                                 4          4          -                      
+        missing/total bins:                                 0          4          -                      
+        % Hit:                                        100.00%        100          -                      
+        Auto, Default and User Defined Bins:
+            bin <auto[1],auto[1]>                         628          1          -    Covered              
+            bin <auto[0],auto[1]>                         593          1          -    Covered              
+            bin <auto[1],auto[0]>                       44360          1          -    Covered              
+            bin <auto[0],auto[0]>                        4419          1          -    Covered              
+Statement Coverage:
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Statements                       1         1         0   100.00%
+
+================================Statement Details================================
+
+Statement Coverage for instance /RAM_pkg --
+
+    Line         Item                      Count     Source 
+    ----         ----                      -----     ------ 
+  File RAM_pkg.sv
+    1                                                package RAM_pkg;
+    2                                                	parameter TESTS = 10000;
+    3                                                
+    4                                                	class RAM_rand;
+    5                                                		rand logic rst_n;
+    6                                                        rand logic [9:0] din;
+    7                                                        rand logic [7:0] address;
+    8                                                		rand logic rx_valid;
+    9                                                		rand logic [7:0] dout;
+    10                                               		rand logic tx_valid;
+    11                                               
+    12                                               		constraint Reset {rst_n      dist {1'b1:/98, 1'b0:/2};}
+    13                                               
+    14                                               
+    15                                               		covergroup cvr_gp ();
+    16                                               			adrdess_cp     : coverpoint address ;
+    17                                               			rx_valid_cp    : coverpoint rx_valid;
+    18                                               			tx_valid_cp    : coverpoint tx_valid;
+    19                                                           rx_tx_cross : cross rx_valid_cp, tx_valid_cp ;
+    20                                               		endgroup
+    21                                               
+    22                                               
+    23                                               		function new();
+    24              1                          1     			cvr_gp = new();
+
+
+COVERGROUP COVERAGE:
+----------------------------------------------------------------------------------------------------------
+Covergroup                                             Metric       Goal       Bins    Status               
+                                                                                                         
+----------------------------------------------------------------------------------------------------------
+ TYPE /RAM_pkg/RAM_rand/cvr_gp                        100.00%        100          -    Covered              
+    covered/total bins:                                    72         72          -                      
+    missing/total bins:                                     0         72          -                      
+    % Hit:                                            100.00%        100          -                      
+    Coverpoint adrdess_cp                             100.00%        100          -    Covered              
+        covered/total bins:                                64         64          -                      
+        missing/total bins:                                 0         64          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin auto[0:3]                                     790          1          -    Covered              
+        bin auto[4:7]                                     787          1          -    Covered              
+        bin auto[8:11]                                    711          1          -    Covered              
+        bin auto[12:15]                                   889          1          -    Covered              
+        bin auto[16:19]                                   847          1          -    Covered              
+        bin auto[20:23]                                   731          1          -    Covered              
+        bin auto[24:27]                                   758          1          -    Covered              
+        bin auto[28:31]                                   796          1          -    Covered              
+        bin auto[32:35]                                   863          1          -    Covered              
+        bin auto[36:39]                                   767          1          -    Covered              
+        bin auto[40:43]                                   842          1          -    Covered              
+        bin auto[44:47]                                   767          1          -    Covered              
+        bin auto[48:51]                                   736          1          -    Covered              
+        bin auto[52:55]                                   862          1          -    Covered              
+        bin auto[56:59]                                   849          1          -    Covered              
+        bin auto[60:63]                                   838          1          -    Covered              
+        bin auto[64:67]                                   759          1          -    Covered              
+        bin auto[68:71]                                   852          1          -    Covered              
+        bin auto[72:75]                                   779          1          -    Covered              
+        bin auto[76:79]                                   662          1          -    Covered              
+        bin auto[80:83]                                   693          1          -    Covered              
+        bin auto[84:87]                                   783          1          -    Covered              
+        bin auto[88:91]                                   764          1          -    Covered              
+        bin auto[92:95]                                   759          1          -    Covered              
+        bin auto[96:99]                                   719          1          -    Covered              
+        bin auto[100:103]                                 674          1          -    Covered              
+        bin auto[104:107]                                 852          1          -    Covered              
+        bin auto[108:111]                                 693          1          -    Covered              
+        bin auto[112:115]                                 880          1          -    Covered              
+        bin auto[116:119]                                 890          1          -    Covered              
+        bin auto[120:123]                                 805          1          -    Covered              
+        bin auto[124:127]                                 778          1          -    Covered              
+        bin auto[128:131]                                 903          1          -    Covered              
+        bin auto[132:135]                                 755          1          -    Covered              
+        bin auto[136:139]                                 666          1          -    Covered              
+        bin auto[140:143]                                 829          1          -    Covered              
+        bin auto[144:147]                                 834          1          -    Covered              
+        bin auto[148:151]                                 833          1          -    Covered              
+        bin auto[152:155]                                 789          1          -    Covered              
+        bin auto[156:159]                                 737          1          -    Covered              
+        bin auto[160:163]                                 880          1          -    Covered              
+        bin auto[164:167]                                 618          1          -    Covered              
+        bin auto[168:171]                                 905          1          -    Covered              
+        bin auto[172:175]                                 686          1          -    Covered              
+        bin auto[176:179]                                 704          1          -    Covered              
+        bin auto[180:183]                                 775          1          -    Covered              
+        bin auto[184:187]                                 736          1          -    Covered              
+        bin auto[188:191]                                 795          1          -    Covered              
+        bin auto[192:195]                                 664          1          -    Covered              
+        bin auto[196:199]                                 863          1          -    Covered              
+        bin auto[200:203]                                 786          1          -    Covered              
+        bin auto[204:207]                                 698          1          -    Covered              
+        bin auto[208:211]                                 736          1          -    Covered              
+        bin auto[212:215]                                 720          1          -    Covered              
+        bin auto[216:219]                                 738          1          -    Covered              
+        bin auto[220:223]                                 798          1          -    Covered              
+        bin auto[224:227]                                 749          1          -    Covered              
+        bin auto[228:231]                                 893          1          -    Covered              
+        bin auto[232:235]                                 785          1          -    Covered              
+        bin auto[236:239]                                 851          1          -    Covered              
+        bin auto[240:243]                                 814          1          -    Covered              
+        bin auto[244:247]                                 726          1          -    Covered              
+        bin auto[248:251]                                 799          1          -    Covered              
+        bin auto[252:255]                                 760          1          -    Covered              
+    Coverpoint rx_valid_cp                            100.00%        100          -    Covered              
+        covered/total bins:                                 2          2          -                      
+        missing/total bins:                                 0          2          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin auto[0]                                      5012          1          -    Covered              
+        bin auto[1]                                     44988          1          -    Covered              
+    Coverpoint tx_valid_cp                            100.00%        100          -    Covered              
+        covered/total bins:                                 2          2          -                      
+        missing/total bins:                                 0          2          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin auto[0]                                     48779          1          -    Covered              
+        bin auto[1]                                      1221          1          -    Covered              
+    Cross rx_tx_cross                                 100.00%        100          -    Covered              
+        covered/total bins:                                 4          4          -                      
+        missing/total bins:                                 0          4          -                      
+        % Hit:                                        100.00%        100          -                      
+        Auto, Default and User Defined Bins:
+            bin <auto[1],auto[1]>                         628          1          -    Covered              
+            bin <auto[0],auto[1]>                         593          1          -    Covered              
+            bin <auto[1],auto[0]>                       44360          1          -    Covered              
+            bin <auto[0],auto[0]>                        4419          1          -    Covered              
+
+TOTAL COVERGROUP COVERAGE: 100.00%  COVERGROUP TYPES: 1
+
+ASSERTION RESULTS:
+--------------------------------------------------------------------
+Name                 File(Line)                   Failure      Pass 
+                                                  Count        Count
+--------------------------------------------------------------------
+/RAM_TB/#anonblk#90584194#53#4#/#ublk#90584194#53/immed__54
+                     RAM_TB.sv(54)                      0          1
+/RAM_TB/DUT/Assrt1   ram.sv(24)                         0          1
+/RAM_TB/DUT/Assrt2   ram.sv(25)                         0          1
+
+Total Coverage By Instance (filtered view): 82.53%
+
